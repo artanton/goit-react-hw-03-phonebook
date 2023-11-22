@@ -6,6 +6,8 @@ import { Filter } from './Filter/Filter';
 import { nanoid } from 'nanoid';
 import Notiflix from 'notiflix';
 
+const storageKey= 'contacts';
+
 export class App extends Component {
   state = {
     contacts: [],
@@ -13,6 +15,26 @@ export class App extends Component {
     name: '',
     number: '',
   };
+
+  
+
+  componentDidMount() {
+    const savedContacts = window.localStorage.getItem(storageKey);
+    if (savedContacts !== null) {
+      this.setState({
+        contacts: JSON.parse(savedContacts),
+      });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.contacts !== this.state.contacts) {
+      window.localStorage.setItem(
+        storageKey,
+        JSON.stringify(this.state.contacts)
+      );
+    }
+  }
 
   updateFilter = seekdName => {
     this.setState({
